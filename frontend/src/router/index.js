@@ -24,6 +24,7 @@ router.beforeEach((to, from, next) => {
     next("/");
   } else if(to.path === "/"&&loggedIn === 1) {
     console.log("前置路由拿到",typeof(loggedIn),loggedIn)
+    store.commit("changename",localStorage.getItem("name"))
     next("/main");
   }else{
     console.log("前置路由拿到",typeof(loggedIn),loggedIn)

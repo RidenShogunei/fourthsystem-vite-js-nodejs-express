@@ -34,8 +34,12 @@ conn.connect(err => {
     // 连接成功后导入路由
     const loginRouter = require('./modle/login')(conn);
     const registerdRouter = require('./modle/register')(conn);
+    const getpublicRouter = require('./modle/getpublic')(conn);
+    const sendpublicRouter = require('./modle/sendpublic')(conn);
     app.use('/login', loginRouter);
     app.use('/register', registerdRouter);
+    app.use('/getpublic', getpublicRouter);
+    app.use('/sendpublic', sendpublicRouter);
   }
 });
 
