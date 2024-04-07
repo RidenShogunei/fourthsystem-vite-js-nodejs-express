@@ -126,7 +126,8 @@ const register = () => {
 };
 
 const submit = async () => {
-  const result = api.registerapi(registerdata);
+  const result =await api.registerapi(registerdata);
+  console.log("注册",result)
   if (result.data==="pass") {
     message.success("注册成功，欢迎进入");
     store.commit("changestate", 1);

@@ -53,6 +53,7 @@ const dynamic = computed(() => {
 })
 watch(selectedKeys,(newvalue)=>{
     store.commit("changekey",newvalue)
+    console.log("key change",store.state.key)
 })
 </script>
 <style scoped>
