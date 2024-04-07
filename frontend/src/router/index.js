@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import store from '../store' 
+import Cookies from 'js-cookie';
+
 const routes = [
   {
     path: "/",
@@ -18,13 +19,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const loggedIn = store.state.state;
-  if (to.path !== "/" && loggedIn !== 1) {
+  const loggedIn = Cookies.get('SESSIONID');
+  if (to.path !== "/" && !loggedIn) {
     console.log("前置路由拿到",typeof(loggedIn),loggedIn)
     next("/");
-  } else if(to.path === "/"&&loggedIn === 1) {
+  } else if(to.path === "/" && loggedIn ) {
     console.log("前置路由拿到",typeof(loggedIn),loggedIn)
-    store.commit("changename",localStorage.getItem("name"))
     next("/main");
   }else{
     console.log("前置路由拿到",typeof(loggedIn),loggedIn)

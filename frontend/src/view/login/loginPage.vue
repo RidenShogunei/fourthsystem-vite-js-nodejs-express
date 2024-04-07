@@ -87,21 +87,26 @@
 <script setup>
 import { message } from "ant-design-vue";
 import api from "../../api/login";
+import Cookies from 'js-cookie';
 const store = useStore();
 const router = useRouter()
+
 const state = computed(() => {
   return store.state.state;
 });
+
 const formState = reactive({
   username: "",
   password: "",
   remember: true,
 });
+
 const registerdata = reactive({
   username: "",
   password: "",
   name: "",
 });
+
 const login = async () => {
   const result = await api.loginapi(formState);
   console.log("登录结果",result);
@@ -109,34 +114,35 @@ const login = async () => {
     message.success("登录成功，欢迎进入");
     store.commit("changestate", 1);
     if (formState.remember === true) {
-      localStorage.setItem("localstate", 1);
-      localStorage.setItem("name",formState.username);
-      store.commit("changename",formState.username)
+      Cookies.set("localstate", 1);
+      Cookies.set("name", formState.username);
+      store.commit("changename", formState.username)
     } else {
-      localStorage.setItem("localstate", 0);
-      store.commit("changename",formState.username)
+      Cookies.remove("localstate"); // delete the cookie if the user does not select 'Remember me'
+      store.commit("changename", formState.username)
     }
     router.push("main");
   } else {
     message.warning("登录失败，不存在此用户");
   }
 };
+
 const register = () => {
   store.commit("changestate", -1);
 };
 
 const submit = async () => {
-  const result =await api.registerapi(registerdata);
+  const result = await api.registerapi(registerdata);
   console.log("注册",result)
-  if (result.data==="pass") {
+  if (result.data === "pass") {
     message.success("注册成功，欢迎进入");
     store.commit("changestate", 1);
     if (formState.remember === true) {
-      localStorage.setItem("localstate", 1);
-      localStorage.setItem("name",registerdata.username);
+      Cookies.set("localstate", 1);
+      Cookies.set("name",registerdata.username);
       store.commit("changename",registerdata.username)
     } else {
-      localStorage.setItem("localstate", 0);
+      Cookies.remove("localstate"); // delete the cookie if the user does not select 'Remember me'
       store.commit("changename",registerdata.username)
     }
     router.push("./main")
