@@ -78,7 +78,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: center;
   padding: 10px;
-  max-height: 700px;
+  max-height: 60vh;
   overflow-y: auto; 
 }
 

@@ -4,6 +4,9 @@
   <div v-if="key==='1'">
   <publicPage></publicPage>
   </div>
+  <div v-else>
+  待施工
+  </div>
   </a-card>
   </div>
 </template>
@@ -12,7 +15,8 @@
 const store=useStore();
 import publicPage from "./components/publicPage.vue"
 const key=computed(()=>{
-  return store.state.key;
+  console.log("key change",store.state.key[0])
+  return store.state.key[0];
 })
 </script>
 
