@@ -16,7 +16,7 @@
         v-model:value="MessageContent"
         placeholder="Type your message here..."
       />
-      <a-button type="primary" @click="sendMessage">Send</a-button>
+      <a-button type="primary" @click="sendMessage">Send</a-button>//TODO 1.新消息自动到底 2.回车键发信息 3.尝试发图片和表情包
     </div>
   </div>
 </template>
