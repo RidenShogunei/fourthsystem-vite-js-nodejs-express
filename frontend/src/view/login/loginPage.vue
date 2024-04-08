@@ -87,7 +87,6 @@
 <script setup>
 import { message } from "ant-design-vue";
 import api from "../../api/login";
-import Cookies from 'js-cookie';
 const store = useStore();
 const router = useRouter()
 
@@ -114,11 +113,9 @@ const login = async () => {
     message.success("登录成功，欢迎进入");
     store.commit("changestate", 1);
     if (formState.remember === true) {
-      Cookies.set("localstate", 1);
-      Cookies.set("name", formState.username);
+      localStorage.setItem('uid',result.uid)
       store.commit("changename", formState.username)
     } else {
-      Cookies.remove("localstate"); // delete the cookie if the user does not select 'Remember me'
       store.commit("changename", formState.username)
     }
     router.push("main");
@@ -138,11 +135,9 @@ const submit = async () => {
     message.success("注册成功，欢迎进入");
     store.commit("changestate", 1);
     if (formState.remember === true) {
-      Cookies.set("localstate", 1);
-      Cookies.set("name",registerdata.username);
+    localStorage.setItem('uid',result.uid)
       store.commit("changename",registerdata.username)
     } else {
-      Cookies.remove("localstate"); // delete the cookie if the user does not select 'Remember me'
       store.commit("changename",registerdata.username)
     }
     router.push("./main")

@@ -4,6 +4,9 @@
   <div v-if="key==='1'">
   <publicPage></publicPage>
   </div>
+  <div v-else-if="key==='2'">
+  <personPage></personPage>
+  </div>
   <div v-else>
   待施工
   </div>
@@ -14,6 +17,7 @@
 <script setup>
 const store=useStore();
 import publicPage from "./components/publicPage.vue"
+import personPage from "./components/personalPage.vue"
 const key=computed(()=>{
   console.log("key change",store.state.key[0])
   return store.state.key[0];

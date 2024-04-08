@@ -19,21 +19,17 @@
 </template>
 <script setup>
 import api from "../../../api/public";
-import { message } from "ant-design-vue"; 
-import Cookies from 'js-cookie';
+import { message } from "ant-design-vue";
+import get from "../../../api/getuser"
 const messages = ref([]);
 const MessageContent = ref('');
 const contRef = ref(null);
-const username = computed(() => {
-  console.log("name", Cookies.get("name"));
-  return Cookies.get("name");
-});
+let username = ref('default');
 const time = ref(new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" }));
 
 const getdata = async () => {
   const result = await api.getpublicapi();
   messages.value = result.data;
-  console.log("拿到的聊天数据", messages.value);
 };
 
 const sendMessage = async () => {
@@ -57,9 +53,12 @@ const sendMessage = async () => {
   }
 };
 let pollingInterval = null; // 这里我们需要将定时器保存在一个变量中，这样我们可以在需要的时候清除它
-onMounted(() => {
- // 在组件被挂载后开始轮询
- pollingInterval = setInterval(getdata, 1000);
+onMounted(async () => {
+  const uid = localStorage.getItem('uid')
+  const result = await get.getuserapi({ uid: uid });
+  username.value = result.data[0].username;
+  // 在组件被挂载后开始轮询
+  pollingInterval = setInterval(getdata, 1000);
 });
 const scrollToBottom = () => {
   let scrollElem = contRef.value;
@@ -74,7 +73,7 @@ onBeforeUnmount(() => {
 });
 
 watch(messages, async (newvalue, oldvalue) => {
-  if(JSON.stringify(newvalue) !== JSON.stringify(oldvalue)){
+  if (JSON.stringify(newvalue) !== JSON.stringify(oldvalue)) {
     await nextTick();
     scrollToBottom();
   }
