@@ -2,14 +2,14 @@
     <div>
         <!-- 用户列表-->
         <div class="list">
-            <a-card v-for="user in userList" :key="user.username" @click="openChatWindow(user)">
+            <a-card class="card" v-for="user in userList" :key="user.username" @click="openChatWindow(user)">
                 <p :style="{ fontSize: '20px', color: 'black' }">{{ user.username }}</p>
             </a-card>
         </div>
         <!-- 对话窗口 -->
         <a-modal :open="isModalVisible" :title="`Chat with ${currentChatUser.username}`" @cancel="handleCancel">
             <div class="public" ref="contRef">
-                <div class="message" v-for="message in messages" :key="message.id">
+                <div class="message" v-for=" message  in  messages " :key="message.id">
                     <div class="man">
                         <div class="avatar">{{ message.speaker[0] }}</div>
                         <div class="username">{{ message.speaker }}</div>
@@ -42,6 +42,8 @@ const contRef = ref(null);
 const currentChatUser = ref({});
 const messages = ref([]);
 const MessageContent = ref('');
+const time = ref(new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" }));
+let pollingInterval = null;
 const getpersonmessage = async (user) => {
     const result = await getmes.getpersonapi({ user1: username.value, user2: user });
     console.log("getperson", result.data)
@@ -51,18 +53,28 @@ const openChatWindow = async (user) => {
     currentChatUser.value = user;
     await getpersonmessage(currentChatUser.value.username);
     isModalVisible.value = true;
+
+    // 开始轮询
+    pollingInterval = setInterval(async () => {
+        await getpersonmessage(currentChatUser.value.username);
+    }, 1000);  // 每5秒运行一次
 };
 
 const handleCancel = () => {
     isModalVisible.value = false;
+
+    // 停止轮询
+    clearInterval(pollingInterval);
+    pollingInterval = null;
 };
 
 const sendMessage = async () => {
     const newMessage = {
         user1: username.value,
-        user2: currentChatUser.value,
+        user2: currentChatUser.value.username,
         time: time.value,
         content: MessageContent.value,
+        speaker: username.value,
     };
     const result = await getmes.sendpersonapi(newMessage);
     console.log("发出的信息", newMessage);
@@ -78,7 +90,10 @@ const sendMessage = async () => {
         message.warn("网络有问题");
     }
 };
-
+const scrollToBottom = () => {
+    let scrollElem = contRef.value;
+    scrollElem.scrollTo({ top: scrollElem.scrollHeight, behavior: "smooth" });
+};
 onMounted(async () => {
     const uid = localStorage.getItem('uid')
     const result = await api.getuserapi({ uid: uid });
@@ -87,14 +102,35 @@ onMounted(async () => {
     console.log("拿到的用户数据", result.data);
     userList.value = result2.data; // 用返回的数据更新userList
 });
+watch(messages, async (newvalue, oldvalue) => {
+    if (JSON.stringify(newvalue) !== JSON.stringify(oldvalue)) {
+        await nextTick();
+        scrollToBottom();
+    }
+});
+onUnmounted(() => {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+});
 </script>
 
 <style scoped>
 .list {
     display: flex;
-    background-color: antiquewhite;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
+}
+
+.card {
+    width: 10vw;
+    height: 15vh;
+    margin: 1vh 1vw;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .public {
