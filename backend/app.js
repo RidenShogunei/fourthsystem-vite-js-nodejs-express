@@ -12,10 +12,10 @@ const certificate = fs.readFileSync('/etc/nginx/ssl/chenjinxu.top.pem', 'utf8');
 const app = express();
 
 const conn = mysql.createConnection({
-  user:'',          //用户名
-  password:'',  //密码
-  host:'',     //主机（默认都是local host）
-  database:''     //数据库名
+  user:'blog',          //用户名
+  password:'chen2003',  //密码
+  host:'47.96.160.149',     //主机（默认都是local host）
+  database:'fourth'     //数据库名
 });
 
 app.use(cors());
@@ -36,10 +36,16 @@ conn.connect(err => {
     const registerdRouter = require('./modle/register')(conn);
     const getpublicRouter = require('./modle/getpublic')(conn);
     const sendpublicRouter = require('./modle/sendpublic')(conn);
+    const getuserRouter = require('./modle/getuserdetile')(conn);
+    const getpersonRouter = require('./modle/getpersonal')(conn);
+    const sendpersonRouter = require('./modle/sendperson')(conn);
     app.use('/login', loginRouter);
     app.use('/register', registerdRouter);
     app.use('/getpublic', getpublicRouter);
     app.use('/sendpublic', sendpublicRouter);
+    app.use('/getuser',getuserRouter)
+    app.use('/getperson',getpersonRouter)
+    app.use('/sendperson',sendpersonRouter)
   }
 });
 
