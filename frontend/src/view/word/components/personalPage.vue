@@ -121,6 +121,8 @@ onUnmounted(() => {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    max-height: 62vh;
+    overflow-y: auto;
 }
 
 .card {

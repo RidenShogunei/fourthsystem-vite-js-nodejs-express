@@ -6,8 +6,6 @@
             </div>
             <a-menu theme="dark" mode="horizontal" @click="handleMenuClick">
                 <a-menu-item key="TextComponent">文字</a-menu-item>
-                <a-menu-item key="VideoComponent">视频</a-menu-item>
-                <a-menu-item key="AudioComponent">语音</a-menu-item>
             </a-menu>
         </a-layout-header>
         <a-layout-content>
@@ -17,7 +15,6 @@
                         style="height: 100%">
                         <a-menu-item key="1">公共房间</a-menu-item>
                         <a-menu-item key="2">私人对话</a-menu-item>
-                        <a-menu-item key="3">个人中心</a-menu-item>
                     </a-menu>
                 </a-layout-sider>
                 <a-layout-content :style="{ padding: '0 24px', minHeight: '280px' }">
