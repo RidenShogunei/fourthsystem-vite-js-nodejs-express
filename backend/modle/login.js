@@ -1,17 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
-
 router.use(bodyParser.json());
-
 module.exports = function (db) {
   router.post("/", (req, res) => {
     console.log("get received!");
-    console.log(req.body);
     let username = req.body.username;
     let password = req.body.password;
     let sqlStr =
-      "SELECT  username, password FROM user WHERE username = ? AND password = ?";
+      "SELECT uid, username, password FROM user WHERE username = ? AND password = ?";
     let query = db.format(sqlStr, [ username, password]);
     db.query(query, (err, results) => {
       if (err) {
@@ -20,15 +17,19 @@ module.exports = function (db) {
       } else {
         console.log("查询成功");
         console.log("查询结果",results)
+        let detail;
+        let uid;
         if(results.length > 0){
-          detail="pass";
-        }else{
+          detail = "pass";
+          uid = results[0].uid;
+        } else {
           detail="fail"
         }
         console.log(detail);
         res.status(200).json({
           code: 200,
           data: detail,
+          uid: uid,
         });
       }
     });

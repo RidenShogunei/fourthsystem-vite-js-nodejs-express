@@ -9,12 +9,14 @@ module.exports = function (db) {
     console.log("Data received!");
     console.log(req.body);
 
-    let username = req.body.username;
+    let user1 = req.body.user1;
+    let user2 = req.body.user2;
     let content = req.body.content;
     let time = req.body.time;
+    let speaker=req.body.speaker;
     console.log("拿到的",content)
-    let sqlStr = "INSERT INTO publicword (user, text, time) VALUES (?, ?, ?)";
-    let values = [username, content, time];
+    let sqlStr = "INSERT INTO personalword (user1,user2, text, time,speaker) VALUES (?,?, ?, ?,?)";
+    let values = [user1,user2, content, time,speaker];
     let query = db.format(sqlStr, values);
 
     db.query(query, (err, results) => {
