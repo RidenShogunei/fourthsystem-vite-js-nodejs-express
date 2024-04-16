@@ -42,7 +42,6 @@ const contRef = ref(null);
 const currentChatUser = ref({});
 const messages = ref([]);
 const MessageContent = ref('');
-const time = ref(new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" }));
 let pollingInterval = null;
 const getpersonmessage = async (user) => {
     const result = await getmes.getpersonapi({ user1: username.value, user2: user });
@@ -69,10 +68,11 @@ const handleCancel = () => {
 };
 
 const sendMessage = async () => {
+    const currentTime = new Date().toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" });
     const newMessage = {
         user1: username.value,
         user2: currentChatUser.value.username,
-        time: time.value,
+        time: currentTime,
         content: MessageContent.value,
         speaker: username.value,
     };
